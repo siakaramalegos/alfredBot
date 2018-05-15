@@ -1,4 +1,6 @@
 'use strict';
+const AWS = require('aws-sdk');
+AWS.config.update({ region: 'us-east-1' });
 
 // This is an edited copy of the sample bot which manages orders for flowers.
 
@@ -102,6 +104,19 @@ function validateSessionRating(date, city) {
   return buildValidationResult(true, null, null);
 }
 
+function getSentiment(feedbackComment, callback) {
+  const comprehend = new AWS.Comprehend();
+  comprehend.detectSentiment({
+    LanguageCode: "en",
+    Text: feedbackComment
+  }, callback);
+}
+
+function capitalize(string) {
+  const lower = string.toLowerCase()
+  return lower.charAt(0).toUpperCase() + lower.slice(1);
+}
+
 // --------------- Functions that control the bot's behavior -----------------------
 
 /**
@@ -116,6 +131,7 @@ function leaveRating(intentRequest, callback) {
   const city = intentRequest.currentIntent.slots.SessionCity;
   const rating = intentRequest.currentIntent.slots.Rating;
   const topic = intentRequest.currentIntent.slots.SessionTopic;
+  const comment = intentRequest.currentIntent.slots.RatingComment;
   const source = intentRequest.invocationSource;
 
   // DialogCodeHook is for initialization and validation
@@ -142,13 +158,22 @@ function leaveRating(intentRequest, callback) {
   }
 
   // Rest of code is for FulfillmentCodeHook
-  console.log(`Begin fulfillment with `, intentRequest.sessionAttributes);
+  console.log(`Begin fulfillment`);
 
-  // Submit the rating, and rely on the goodbye message of the bot to define the message to the end user.  In a real bot, this would likely involve a call to a backend service.
-  callback(close(intentRequest.sessionAttributes, 'Fulfilled', {
-    contentType: 'PlainText',
-    content: `Thanks, your rating of ${rating} was submitted for ${topic} on ${date} in ${city}.`
-  }));
+  getSentiment(comment, function (err, data) {
+    if (err) console.log(err, err.stack); // an error occurred
+    else {
+      const sentiment = data.Sentiment
+      const score = data.SentimentScore[capitalize(sentiment)]
+      console.log(`sentiment: ${sentiment}, score: ${score}`); // successful response
+
+      // Submit the rating, and rely on the goodbye message of the bot to define the message to the end user.  In a real bot, this would likely involve a call to a backend service.
+      callback(close(intentRequest.sessionAttributes, 'Fulfilled', {
+        contentType: 'PlainText',
+        content: `Thanks, your rating of ${rating} was submitted for ${topic} on ${date} in ${city}.`
+      }));
+    }
+  })
 }
 
 // --------------- Intents -----------------------
