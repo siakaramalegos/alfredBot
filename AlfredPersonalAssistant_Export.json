@@ -1,0 +1,354 @@
+{
+  "metadata": {
+    "schemaVersion": "1.0",
+    "importType": "LEX",
+    "importFormat": "JSON"
+  },
+  "resource": {
+    "name": "AlfredPersonalAssistant",
+    "version": "1",
+    "intents": [
+      {
+        "rejectionStatement": {
+          "messages": [
+            {
+              "contentType": "PlainText",
+              "content": "Okay. Your rating will not be submitted."
+            }
+          ]
+        },
+        "name": "Feedback",
+        "version": "10",
+        "fulfillmentActivity": {
+          "type": "CodeHook",
+          "codeHook": {
+            "uri": "arn:aws:lambda:us-east-1:044083051031:function:alfredBot",
+            "messageVersion": "1.0"
+          }
+        },
+        "sampleUtterances": [
+          "I would like to give feedback",
+          "Can I give feedback",
+          "Leave feedback",
+          "feedback"
+        ],
+        "slots": [
+          {
+            "name": "Rating",
+            "slotConstraint": "Required",
+            "slotType": "RatingType",
+            "slotTypeVersion": "1",
+            "valueElicitationPrompt": {
+              "messages": [
+                {
+                  "contentType": "PlainText",
+                  "content": "How did you like the session? Choose a value from 1 to 5, 5 being excellent and 1 being poor. "
+                }
+              ],
+              "maxAttempts": 2
+            },
+            "priority": 4,
+            "sampleUtterances": []
+          },
+          {
+            "name": "RatingComment",
+            "slotConstraint": "Required",
+            "slotType": "RatingCommentType",
+            "slotTypeVersion": "1",
+            "valueElicitationPrompt": {
+              "messages": [
+                {
+                  "contentType": "PlainText",
+                  "content": "How did you like the session? Leave a comment."
+                }
+              ],
+              "maxAttempts": 2
+            },
+            "priority": 5,
+            "sampleUtterances": []
+          },
+          {
+            "name": "SessionCity",
+            "slotConstraint": "Required",
+            "slotType": "Cities",
+            "slotTypeVersion": "1",
+            "valueElicitationPrompt": {
+              "messages": [
+                {
+                  "contentType": "PlainText",
+                  "content": "In which city was the session?"
+                }
+              ],
+              "maxAttempts": 2
+            },
+            "priority": 2,
+            "sampleUtterances": []
+          },
+          {
+            "name": "SessionDate",
+            "slotConstraint": "Required",
+            "slotType": "AMAZON.DATE",
+            "valueElicitationPrompt": {
+              "messages": [
+                {
+                  "contentType": "PlainText",
+                  "content": "On what date was the session you would like to leave feedback for?"
+                }
+              ],
+              "maxAttempts": 2
+            },
+            "priority": 1,
+            "sampleUtterances": []
+          },
+          {
+            "name": "SessionTopic",
+            "slotConstraint": "Required",
+            "slotType": "SessionTopic",
+            "slotTypeVersion": "1",
+            "valueElicitationPrompt": {
+              "messages": [
+                {
+                  "contentType": "PlainText",
+                  "content": "What was the session about?"
+                }
+              ],
+              "maxAttempts": 2
+            },
+            "priority": 3,
+            "sampleUtterances": []
+          }
+        ],
+        "confirmationPrompt": {
+          "messages": [
+            {
+              "contentType": "PlainText",
+              "content": "Are you sure you want to leave a rating of {Rating} and a comment of \"{RatingComment}\"?"
+            }
+          ],
+          "maxAttempts": 3
+        },
+        "dialogCodeHook": {
+          "uri": "arn:aws:lambda:us-east-1:044083051031:function:alfredBot",
+          "messageVersion": "1.0"
+        },
+        "conclusionStatement": {
+          "messages": [
+            {
+              "contentType": "PlainText",
+              "content": "Thank you. Your rating of {Rating} was submitted."
+            }
+          ]
+        }
+      },
+      {
+        "name": "GitHub",
+        "version": "5",
+        "fulfillmentActivity": {
+          "type": "ReturnIntent"
+        },
+        "sampleUtterances": [
+          "What is your github account",
+          "github",
+          "i would like your github link",
+          "what is your github profile",
+          "who are you on github"
+        ],
+        "slots": [],
+        "conclusionStatement": {
+          "messages": [
+            {
+              "contentType": "PlainText",
+              "content": "Here is Sia's GitHub profile: https://github.com/siakaramalegos"
+            }
+          ]
+        }
+      },
+      {
+        "name": "Twitter",
+        "version": "3",
+        "fulfillmentActivity": {
+          "type": "ReturnIntent"
+        },
+        "sampleUtterances": [
+          "twitter",
+          "what is your twitter handle",
+          "what is your twitter link",
+          "how do i find you on twitter",
+          "what is your twitter username"
+        ],
+        "slots": [],
+        "conclusionStatement": {
+          "messages": [
+            {
+              "contentType": "PlainText",
+              "content": "You can follow Sia on twitter here: https://twitter.com/thegreengreek"
+            }
+          ]
+        }
+      },
+      {
+        "name": "Goodbye",
+        "version": "2",
+        "fulfillmentActivity": {
+          "type": "ReturnIntent"
+        },
+        "sampleUtterances": [
+          "thanks",
+          "goodbye",
+          "bye",
+          "cheerio",
+          "ciao",
+          "adios",
+          "thank you"
+        ],
+        "slots": [],
+        "conclusionStatement": {
+          "messages": [
+            {
+              "contentType": "PlainText",
+              "content": "Parting is such sweet sorrow."
+            },
+            {
+              "contentType": "PlainText",
+              "content": "Live long and prosper."
+            },
+            {
+              "contentType": "PlainText",
+              "content": "I look forward to our next meeting."
+            },
+            {
+              "contentType": "PlainText",
+              "content": "So long and thanks for all the fish."
+            },
+            {
+              "contentType": "PlainText",
+              "content": "Stay classy."
+            }
+          ]
+        }
+      },
+      {
+        "name": "Hello",
+        "version": "1",
+        "fulfillmentActivity": {
+          "type": "ReturnIntent"
+        },
+        "sampleUtterances": [
+          "hello",
+          "hi",
+          "sia",
+          "alfred"
+        ],
+        "slots": [],
+        "conclusionStatement": {
+          "messages": [
+            {
+              "contentType": "PlainText",
+              "content": "Hello there! I'm Alfred, Sia's personal assistant bot. To get started, ask for what you want. For example, ask for my GitHub or Twitter username."
+            }
+          ]
+        }
+      }
+    ],
+    "slotTypes": [
+      {
+        "description": "Integer of quantitative feedback (1-5)",
+        "name": "RatingType",
+        "version": "1",
+        "enumerationValues": [
+          {
+            "value": "1",
+            "synonyms": [
+              "one",
+              "poor"
+            ]
+          },
+          {
+            "value": "2",
+            "synonyms": [
+              "two"
+            ]
+          },
+          {
+            "value": "3",
+            "synonyms": [
+              "three",
+              "average"
+            ]
+          },
+          {
+            "value": "4",
+            "synonyms": [
+              "four"
+            ]
+          },
+          {
+            "value": "5",
+            "synonyms": [
+              "five",
+              "excellent"
+            ]
+          }
+        ],
+        "valueSelectionStrategy": "TOP_RESOLUTION"
+      },
+      {
+        "description": "City with a session",
+        "name": "Cities",
+        "version": "1",
+        "enumerationValues": [
+          {
+            "value": "New Orleans",
+            "synonyms": []
+          }
+        ],
+        "valueSelectionStrategy": "ORIGINAL_VALUE"
+      },
+      {
+        "description": "Qualitative feedback for a session",
+        "name": "RatingCommentType",
+        "version": "1",
+        "enumerationValues": [
+          {
+            "value": "It was great",
+            "synonyms": []
+          }
+        ],
+        "valueSelectionStrategy": "ORIGINAL_VALUE"
+      },
+      {
+        "description": "Topic for the session",
+        "name": "SessionTopic",
+        "version": "1",
+        "enumerationValues": [
+          {
+            "value": "AI",
+            "synonyms": []
+          }
+        ],
+        "valueSelectionStrategy": "ORIGINAL_VALUE"
+      }
+    ],
+    "voiceId": "Joey",
+    "childDirected": false,
+    "locale": "en-US",
+    "idleSessionTTLInSeconds": 300,
+    "clarificationPrompt": {
+      "messages": [
+        {
+          "contentType": "PlainText",
+          "content": "Sorry, can you please repeat that?"
+        }
+      ],
+      "maxAttempts": 5
+    },
+    "abortStatement": {
+      "messages": [
+        {
+          "contentType": "PlainText",
+          "content": "Sorry, I could not understand. Goodbye."
+        }
+      ]
+    }
+  }
+}
